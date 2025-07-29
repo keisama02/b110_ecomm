@@ -1,4 +1,5 @@
 <?php
+
 require_once "dbconnect.php";
 if (isset($_POST["login"])) //$_POST is super global array
 {
@@ -23,8 +24,6 @@ if (isset($_POST["login"])) //$_POST is super global array
         $errorMessage = "Email or Password might be incorrect!";
     }
 }
-
-
 
 ?>
 
