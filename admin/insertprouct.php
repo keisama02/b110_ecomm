@@ -1,6 +1,9 @@
 <?php
 
 require_once "dbconnect.php";
+if (!isset($_SESSION)) { //
+    session_start();
+}
 try {
     $sql = "select * from category";
     $stmt = $con->prepare($sql);
@@ -20,8 +23,21 @@ if (isset($_POST["insertBtn"])) {
     $filePath = "productImage/".$fileImage['name'];
     $status = move_uploaded_file($fileImage['tmp_name'], $filePath);
     if ($status) {
-        echo "file uploaded";
-        echo "<img src=$filePath>";
+        try {// inserting data into database
+            // 	productId	productName	category	price	description	quantity	imagePath	
+            $sql = "insert into product values (?,?,?,?,?,?,?)";
+            $stmt = $con->prepare($sql);
+            $flag = $stmt->execute([null, $name, $category, $price, $description, $qty, $filePath]);
+            $id = $con->lastInsertId();
+            if($flag) {
+                $message = "new product with id $id has been inserted successfully!";
+                $_SESSION["message"] = $message;
+                header("Location: viewProduct.php");
+            }
+        }
+        catch (Exception $e) {
+
+        }
     }
     else {
         echo "file upload fail";
